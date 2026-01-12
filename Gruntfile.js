@@ -16,14 +16,18 @@ module.exports = function (grunt) {
           implementation: sass,
           sourceMap: true
         },
-        files: { 'build/css/style.css': 'assets/scss/main.scss' }
+        files: {
+          'build/css/style.css': 'assets/scss/main.scss'
+        }
       },
       prod: {
         options: {
           implementation: sass,
           sourceMap: false
         },
-        files: { 'build/css/style.css': 'assets/scss/main.scss' }
+        files: {
+          'build/css/style.css': 'assets/scss/main.scss'
+        }
       }
     },
 
@@ -32,7 +36,17 @@ module.exports = function (grunt) {
         browsers: ['last 2 versions', 'ie 11'],
         map: true
       },
-      dist: {
+      dev: {
+        options: {
+          map: true
+        },
+        src: 'build/css/style.css',
+        dest: 'build/css/style.css'
+      },
+      prod: {
+        options: {
+          map: false
+        },
         src: 'build/css/style.css',
         dest: 'build/css/style.css'
       }
@@ -40,7 +54,9 @@ module.exports = function (grunt) {
 
     cssmin: {
       prod: {
-        files: { 'build/css/style.css': ['build/css/style.css'] }
+        files: {
+          'build/css/style.css': 'build/css/style.css'
+        }
       }
     },
 
@@ -50,20 +66,29 @@ module.exports = function (grunt) {
         dest: 'build/js/scripts.js'
       }
     },
+  
     uglify: {
       prod: {
-        src: 'build/js/scripts.js',
-        dest: 'build/js/scripts.js'
+        files: {
+          'build/js/scripts.js': 'build/js/scripts.js'
+        }
       }
     },
 
     htmlmin: {
       prod: {
-        options: { removeComments: true, collapseWhitespace: true },
-        files: { 'build/index.html': 'index.html' }
+        options: {
+          removeComments: true,
+          collapseWhitespace: true
+        },
+        files: {
+          'build/index.html': 'index.html'
+        }
       },
       dev: {
-        files: { 'build/index.html': 'index.html' }
+        files: {
+          'build/index.html': 'index.html'
+        }
       }
     },
 
@@ -100,24 +125,54 @@ module.exports = function (grunt) {
     },
 
     watch: {
-      html: { files: ['index.html'], tasks: ['htmlmin:dev'] },
-      css: { files: ['assets/scss/**/*.scss'], tasks: ['sass:dev', 'autoprefixer'] },
-      js: { files: ['assets/js/**/*.js'], tasks: ['concat'] },
-      img: { files: ['assets/img/**/*'], tasks: ['copy:images'] }
+      css: {
+        files: ['assets/scss/**/*.scss'],
+        tasks: ['sass:dev', 'autoprefixer:dev']
+      },
+      js: {
+        files: ['assets/js/**/*.js'],
+        tasks: ['concat']
+      },
+      html: {
+        files: ['index.html'],
+        tasks: ['htmlmin:dev']
+      },
+      img: {
+        files: ['assets/img/**/*'],
+        tasks: ['copy:images']
+      }
     }
   });
 
-  grunt.registerTask('dev', [
-    'clean', 'htmlmin:dev', 'sass:dev', 'autoprefixer', 'concat', 'copy:fonts', 'copy:images', 'browserSync', 'watch'
-  ]);
+  grunt.registerTask(
+    'dev',
+    [
+      'clean',
+      'htmlmin:dev',
+      'sass:dev',
+      'autoprefixer:dev',
+      'concat',
+      'copy:fonts',
+      'copy:images',
+      'browserSync',
+      'watch'
+    ]
+  );
 
-  grunt.registerTask('build', [
-    'clean', 'htmlmin:dev', 'sass:dev', 'autoprefixer', 'concat', 'copy:fonts', 'copy:images'
-  ]);
-
-  grunt.registerTask('prod', [
-    'clean', 'htmlmin:prod', 'sass:prod', 'autoprefixer', 'cssmin', 'concat', 'uglify', 'copy:fonts', 'copy:images'
-  ]);
+  grunt.registerTask(
+    'prod',
+    [
+      'clean',
+      'htmlmin:prod',
+      'sass:prod',
+      'autoprefixer:prod',
+      'cssmin',
+      'concat',
+      'uglify',
+      'copy:fonts',
+      'copy:images'
+    ]
+  );
 
   grunt.registerTask('default', ['dev']);
 };
